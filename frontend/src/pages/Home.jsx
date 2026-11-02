@@ -5,15 +5,12 @@ import {
   ArrowUpRight,
   Bookmark,
   BriefcaseBusiness,
-  Building2,
-  CheckCircle2,
   Clock3,
   FileText,
   Globe2,
   MapPin,
   Menu,
   Search,
-  ShieldCheck,
   Sparkles,
   TrendingUp,
   Users,
@@ -26,107 +23,110 @@ const jobs = [
     id: 1,
     role: 'Frontend Developer',
     company: 'TechNova Solutions',
-    location: 'Bangalore, India',
+    category: 'Development',
+    location: 'Remote',
     type: 'Full-time',
     experience: '1–3 years',
-    salary: '₹5–8 LPA',
-    category: 'Technology',
-    logo: 'T',
-    color: 'bg-blue-100 text-blue-700',
+    salary: '₹4–7 LPA',
     posted: '2 days ago',
+    logo: 'TN',
+    logoColor: 'bg-blue-100 text-blue-700',
     featured: true,
+    skills: ['React', 'JavaScript', 'HTML', 'CSS'],
   },
   {
     id: 2,
     role: 'MERN Stack Developer',
-    company: 'Innovate Labs',
-    location: 'Remote, India',
+    company: 'DigitalCraft Labs',
+    category: 'Development',
+    location: 'Bengaluru, India',
     type: 'Full-time',
-    experience: '1–2 years',
-    salary: '₹4–7 LPA',
-    category: 'Technology',
-    logo: 'I',
-    color: 'bg-purple-100 text-purple-700',
+    experience: '0–2 years',
+    salary: '₹3–6 LPA',
     posted: '1 day ago',
+    logo: 'DC',
+    logoColor: 'bg-emerald-100 text-emerald-700',
     featured: true,
+    skills: ['MongoDB', 'Express', 'React', 'Node.js'],
   },
   {
     id: 3,
     role: 'UI/UX Designer',
-    company: 'PixelCraft Studio',
-    location: 'Delhi, India',
-    type: 'Full-time',
-    experience: '2–4 years',
-    salary: '₹6–9 LPA',
+    company: 'PixelWorks',
     category: 'Design',
-    logo: 'P',
-    color: 'bg-pink-100 text-pink-700',
+    location: 'Remote',
+    type: 'Full-time',
+    experience: '1–2 years',
+    salary: '₹3–5 LPA',
     posted: '3 days ago',
+    logo: 'PW',
+    logoColor: 'bg-purple-100 text-purple-700',
     featured: false,
+    skills: ['Figma', 'UI Design', 'Prototyping'],
   },
   {
     id: 4,
     role: 'Backend Developer',
-    company: 'CloudBridge',
-    location: 'Hyderabad, India',
+    company: 'CloudStack Technologies',
+    category: 'Development',
+    location: 'Delhi, India',
     type: 'Full-time',
     experience: '1–3 years',
-    salary: '₹5–9 LPA',
-    category: 'Technology',
-    logo: 'C',
-    color: 'bg-emerald-100 text-emerald-700',
-    posted: 'Today',
+    salary: '₹5–8 LPA',
+    posted: '4 days ago',
+    logo: 'CS',
+    logoColor: 'bg-orange-100 text-orange-700',
     featured: false,
+    skills: ['Node.js', 'Express', 'MongoDB', 'APIs'],
   },
 ]
 
 const features = [
   {
     icon: Sparkles,
-    number: '01',
-    title: 'AI-powered job matching',
+    title: 'AI-Powered Job Matching',
     description:
-      'Discover opportunities that align with your skills, experience and career goals.',
+      'Discover opportunities that match your skills, experience, qualifications and career goals.',
+    color: 'bg-emerald-50 text-emerald-600',
   },
   {
     icon: FileText,
-    number: '02',
-    title: 'Smart resume builder',
+    title: 'AI Resume Builder',
     description:
-      'Create professional resumes with AI assistance and customizable templates.',
+      'Create professional, ATS-friendly resumes with AI assistance and customizable templates.',
+    color: 'bg-blue-50 text-blue-600',
   },
   {
     icon: Users,
-    number: '03',
-    title: 'Professional networking',
+    title: 'Professional Networking',
     description:
-      'Connect with professionals, share knowledge and grow your career network.',
+      'Connect with professionals, share updates and build meaningful career relationships.',
+    color: 'bg-purple-50 text-purple-600',
   },
   {
     icon: TrendingUp,
-    number: '04',
-    title: 'Career growth insights',
+    title: 'Career Insights',
     description:
-      'Identify skill gaps and discover what you need to reach your next career milestone.',
+      'Understand your skills, track your progress and discover ways to improve your profile.',
+    color: 'bg-orange-50 text-orange-600',
   },
 ]
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
 
-  const navLinks = [
-    ['Home', '#home'],
-    ['Find Jobs', '#jobs'],
-    ['How It Works', '#how-it-works'],
-    ['Features', '#features'],
-  ]
+  const closeMenu = () => setMenuOpen(false)
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/90 backdrop-blur-xl">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
-        <a href="#home" className="flex items-center gap-2">
+        <a
+          href="#home"
+          className="flex items-center gap-2.5"
+          onClick={closeMenu}
+        >
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-lg shadow-emerald-200">
-            <Sparkles size={22} />
+            <Sparkles size={21} />
           </div>
           <span className="text-2xl font-extrabold tracking-tight text-slate-900">
             Career<span className="text-emerald-600">AI</span>
@@ -134,37 +134,33 @@ function Navbar() {
         </a>
 
         <div className="hidden items-center gap-8 md:flex">
-          {navLinks.map(([label, href]) => (
-            <a
-              key={label}
-              href={href}
-              className="text-sm font-medium text-slate-600 transition hover:text-emerald-600"
-            >
-              {label}
-            </a>
-          ))}
+          <a href="#home" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
+            Home
+          </a>
+          <a href="#jobs" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
+            Find Jobs
+          </a>
+          <a href="#features" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
+            Features
+          </a>
+          <a href="#how-it-works" className="text-sm font-medium text-slate-600 transition hover:text-emerald-600">
+            How It Works
+          </a>
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
-          <a
-            href="#jobs"
-            className="rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-          >
-            Sign in
-          </a>
-          <a
-            href="#jobs"
-            className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-100 transition hover:bg-emerald-700"
-          >
-            Get started <ArrowRight className="ml-1 inline" size={16} />
-          </a>
+          <button className="rounded-xl px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
+            Log in
+          </button>
+          <button className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-200 transition hover:bg-emerald-700">
+            Get Started <ArrowRight className="ml-1 inline" size={16} />
+          </button>
         </div>
 
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="rounded-lg p-2 text-slate-700 md:hidden"
-          aria-label="Toggle navigation"
-          aria-expanded={menuOpen}
+          className="rounded-lg p-2 text-slate-700 hover:bg-slate-100 md:hidden"
+          aria-label="Toggle navigation menu"
         >
           {menuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -173,23 +169,29 @@ function Navbar() {
       {menuOpen && (
         <div className="border-t border-slate-100 bg-white px-5 py-5 md:hidden">
           <div className="flex flex-col gap-4">
-            {navLinks.map(([label, href]) => (
+            {[
+              ['Home', '#home'],
+              ['Find Jobs', '#jobs'],
+              ['Features', '#features'],
+              ['How It Works', '#how-it-works'],
+            ].map(([label, href]) => (
               <a
                 key={label}
                 href={href}
-                onClick={() => setMenuOpen(false)}
-                className="font-medium text-slate-700"
+                onClick={closeMenu}
+                className="font-medium text-slate-700 hover:text-emerald-600"
               >
                 {label}
               </a>
             ))}
-            <a
-              href="#jobs"
-              onClick={() => setMenuOpen(false)}
-              className="rounded-xl bg-emerald-600 px-5 py-3 text-center font-semibold text-white"
-            >
-              Get started
-            </a>
+            <div className="flex gap-3 border-t border-slate-100 pt-4">
+              <button className="flex-1 rounded-xl border border-slate-200 py-2.5 font-semibold text-slate-700">
+                Log in
+              </button>
+              <button className="flex-1 rounded-xl bg-emerald-600 py-2.5 font-semibold text-white">
+                Get Started
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -197,186 +199,204 @@ function Navbar() {
   )
 }
 
-function Hero({ onSearch }) {
+function HeroSection({ onSearch }) {
   const [keyword, setKeyword] = useState('')
   const [location, setLocation] = useState('')
 
-  const handleSubmit = (event) => {
+  const submitSearch = (event) => {
     event.preventDefault()
     onSearch(keyword, location)
   }
 
   return (
-    <section
-      id="home"
-      className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-teal-50"
-    >
-      <div className="pointer-events-none absolute -right-40 -top-40 h-96 w-96 rounded-full bg-emerald-100/60 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-teal-100/50 blur-3xl" />
+    <section id="home" className="relative overflow-hidden bg-white">
+      <div className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-emerald-100/60 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-40 -left-32 h-96 w-96 rounded-full bg-blue-100/50 blur-3xl" />
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-5 py-20 lg:grid-cols-2 lg:px-8 lg:py-28">
+      <div className="relative mx-auto grid max-w-7xl items-center gap-16 px-5 py-20 lg:grid-cols-2 lg:px-8 lg:py-28">
         <div>
-          <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white px-4 py-2 text-sm font-semibold text-emerald-700 shadow-sm">
+          <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700">
             <Sparkles size={16} />
-            Your career, powered by AI
-            <ArrowUpRight size={15} />
+            Your AI-powered career partner
           </div>
 
-          <h1 className="max-w-2xl text-5xl leading-[1.12] font-extrabold tracking-tight text-slate-900 sm:text-6xl lg:text-7xl">
-            Find work that
-            <span className="block text-emerald-600">moves you</span>
-            forward.
+          <h1 className="max-w-2xl text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+            Find the career
+            <span className="block text-emerald-600">you deserve.</span>
           </h1>
 
-          <p className="mt-7 max-w-xl text-lg leading-8 text-slate-600">
-            Discover meaningful opportunities, build your professional
-            identity and let AI help you take the next step in your career.
+          <p className="mt-6 max-w-xl text-base leading-8 text-slate-500 sm:text-lg">
+            Discover better opportunities, build your professional identity
+            and grow your career with the power of artificial intelligence.
           </p>
 
           <form
-            onSubmit={handleSubmit}
-            className="mt-9 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl shadow-slate-200/60"
+            onSubmit={submitSearch}
+            className="mt-9 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl shadow-slate-200/60 sm:flex sm:items-center"
           >
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="flex items-center gap-3 px-3">
-                <Search className="shrink-0 text-emerald-600" size={21} />
-                <input
-                  value={keyword}
-                  onChange={(event) => setKeyword(event.target.value)}
-                  placeholder="Job title or skill"
-                  className="w-full min-w-0 py-3 text-sm text-slate-800 outline-none placeholder:text-slate-400"
-                />
-              </div>
+            <div className="flex flex-1 items-center gap-3 px-3 py-3">
+              <Search className="shrink-0 text-emerald-600" size={21} />
+              <input
+                type="text"
+                value={keyword}
+                onChange={(event) => setKeyword(event.target.value)}
+                placeholder="Job title, skills or keywords"
+                className="w-full min-w-0 bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400"
+              />
+            </div>
 
-              <div className="flex items-center gap-3 border-slate-100 px-3 sm:border-l">
-                <MapPin className="shrink-0 text-emerald-600" size={21} />
-                <input
-                  value={location}
-                  onChange={(event) => setLocation(event.target.value)}
-                  placeholder="City or remote"
-                  className="w-full min-w-0 py-3 text-sm text-slate-800 outline-none placeholder:text-slate-400"
-                />
-              </div>
+            <div className="flex flex-1 items-center gap-3 border-t border-slate-100 px-3 py-3 sm:border-l sm:border-t-0">
+              <MapPin className="shrink-0 text-emerald-600" size={21} />
+              <input
+                type="text"
+                value={location}
+                onChange={(event) => setLocation(event.target.value)}
+                placeholder="City or remote"
+                className="w-full min-w-0 bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400"
+              />
             </div>
 
             <button
               type="submit"
-              className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-4 font-semibold text-white transition hover:bg-emerald-700 sm:mt-1"
+              className="mt-2 w-full rounded-xl bg-emerald-600 px-6 py-4 text-sm font-bold text-white transition hover:bg-emerald-700 sm:mt-0 sm:w-auto"
             >
-              <Search size={18} />
-              Search opportunities
+              Search Jobs
             </button>
           </form>
 
-          <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-slate-500">
-            <span className="font-medium">Popular:</span>
-            {['React Developer', 'MERN Stack', 'UI/UX', 'Remote Jobs'].map(
-              (item) => (
-                <button
-                  key={item}
-                  onClick={() => {
-                    setKeyword(item)
-                    onSearch(item, '')
-                  }}
-                  className="rounded-full border border-slate-200 bg-white px-3 py-1.5 transition hover:border-emerald-300 hover:text-emerald-700"
-                >
-                  {item}
-                </button>
-              )
-            )}
+          <div className="mt-6 flex flex-wrap items-center gap-2 text-sm">
+            <span className="mr-1 text-slate-400">Popular:</span>
+            {['React Developer', 'MERN Stack', 'Remote Jobs'].map((tag) => (
+              <button
+                key={tag}
+                onClick={() => {
+                  setKeyword(tag)
+                  onSearch(tag, '')
+                }}
+                className="rounded-full border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700"
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-10 flex flex-wrap items-center gap-6">
+            <div>
+              <div className="text-2xl font-extrabold text-slate-900">10K+</div>
+              <div className="text-xs text-slate-500">Career opportunities</div>
+            </div>
+            <div className="h-10 w-px bg-slate-200" />
+            <div>
+              <div className="text-2xl font-extrabold text-slate-900">5K+</div>
+              <div className="text-xs text-slate-500">Active professionals</div>
+            </div>
+            <div className="h-10 w-px bg-slate-200" />
+            <div>
+              <div className="text-2xl font-extrabold text-slate-900">AI</div>
+              <div className="text-xs text-slate-500">Career assistance</div>
+            </div>
           </div>
         </div>
 
-        <div className="relative mx-auto w-full max-w-lg">
-          <div className="rounded-3xl border border-white bg-white p-5 shadow-2xl shadow-emerald-900/10 sm:p-7">
+        <div className="relative mx-auto w-full max-w-xl">
+          <div className="absolute -right-5 -top-5 h-32 w-32 rounded-full bg-emerald-100 blur-2xl" />
+          <div className="absolute -bottom-8 -left-5 h-32 w-32 rounded-full bg-blue-100 blur-2xl" />
+
+          <div className="relative rounded-3xl border border-slate-200 bg-white p-5 shadow-2xl shadow-slate-200/70 sm:p-7">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-500">
-                  Your career dashboard
-                </p>
-                <h3 className="mt-1 text-xl font-bold text-slate-900">
-                  Welcome back!
-                </h3>
+                <p className="text-sm font-semibold text-slate-500">Your career dashboard</p>
+                <h3 className="mt-1 text-xl font-bold text-slate-900">Welcome back!</h3>
               </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
-                <TrendingUp size={24} />
+              <div className="rounded-xl bg-emerald-50 p-3 text-emerald-600">
+                <Zap size={23} />
               </div>
             </div>
 
-            <div className="mt-7 rounded-2xl bg-emerald-50 p-5">
-              <div className="flex items-center gap-2 text-sm font-semibold text-emerald-800">
-                <Sparkles size={17} />
-                AI career insights
+            <div className="mt-7 rounded-2xl bg-slate-50 p-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-slate-700">Profile strength</p>
+                  <p className="mt-1 text-xs text-slate-400">Your profile is looking great</p>
+                </div>
+                <span className="text-2xl font-extrabold text-emerald-600">85%</span>
               </div>
-              <h4 className="mt-3 text-2xl font-bold text-slate-900">
-                Your next opportunity is waiting.
-              </h4>
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                Build your profile to discover opportunities that match your
-                professional skills.
-              </p>
-              <div className="mt-5 h-2 overflow-hidden rounded-full bg-emerald-100">
-                <div className="h-full w-3/4 rounded-full bg-emerald-500" />
+              <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-200">
+                <div className="h-full w-[85%] rounded-full bg-emerald-500" />
               </div>
-              <p className="mt-2 text-xs text-slate-500">
-                Profile completion preview
+              <p className="mt-3 text-xs text-slate-500">
+                Add your latest projects to reach 100%.
               </p>
             </div>
 
-            <div className="mt-5 grid grid-cols-2 gap-4">
-              <div className="rounded-2xl border border-slate-100 p-4">
-                <div className="flex items-center gap-2 text-slate-500">
-                  <BriefcaseBusiness size={17} />
-                  <span className="text-xs">Job discovery</span>
-                </div>
-                <p className="mt-2 text-2xl font-bold text-slate-900">
-                  AI-powered
-                </p>
-                <p className="mt-1 text-xs text-slate-500">
-                  Skills-based matching
-                </p>
+            <div className="mt-6">
+              <div className="mb-4 flex items-center justify-between">
+                <h4 className="font-bold text-slate-900">AI job recommendations</h4>
+                <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                  For you
+                </span>
               </div>
 
-              <div className="rounded-2xl border border-slate-100 p-4">
-                <div className="flex items-center gap-2 text-slate-500">
-                  <FileText size={17} />
-                  <span className="text-xs">Resume tools</span>
+              {[
+                {
+                  role: 'React Developer',
+                  company: 'InnovateTech',
+                  match: '96%',
+                  color: 'bg-blue-100 text-blue-700',
+                  initials: 'IT',
+                },
+                {
+                  role: 'Full Stack Developer',
+                  company: 'FutureLabs',
+                  match: '92%',
+                  color: 'bg-purple-100 text-purple-700',
+                  initials: 'FL',
+                },
+                {
+                  role: 'Frontend Engineer',
+                  company: 'CloudWorks',
+                  match: '89%',
+                  color: 'bg-orange-100 text-orange-700',
+                  initials: 'CW',
+                },
+              ].map((job) => (
+                <div
+                  key={job.role}
+                  className="mb-3 flex items-center justify-between rounded-xl border border-slate-100 p-3"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-lg text-xs font-bold ${job.color}`}>
+                      {job.initials}
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-slate-800">{job.role}</p>
+                      <p className="text-xs text-slate-400">{job.company}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-extrabold text-emerald-600">{job.match}</p>
+                    <p className="text-[10px] text-slate-400">Match</p>
+                  </div>
                 </div>
-                <p className="mt-2 text-2xl font-bold text-slate-900">
-                  Smart AI
-                </p>
-                <p className="mt-1 text-xs text-slate-500">
-                  Career-ready profiles
-                </p>
-              </div>
+              ))}
+            </div>
+
+            <div className="mt-5 flex items-center gap-3 rounded-xl bg-emerald-50 p-4">
+              <Sparkles className="shrink-0 text-emerald-600" size={20} />
+              <p className="text-xs leading-5 text-emerald-800">
+                <strong>AI insight:</strong> Your React and JavaScript skills
+                match several new opportunities.
+              </p>
             </div>
           </div>
 
-          <div className="absolute -right-3 -top-5 hidden items-center gap-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-xl sm:flex lg:-right-8">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
-              <CheckCircle2 size={22} />
+          <div className="absolute -left-8 top-1/3 hidden items-center gap-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-xl sm:flex">
+            <div className="rounded-xl bg-emerald-100 p-2 text-emerald-600">
+              <TrendingUp size={20} />
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-900">
-                Built around you
-              </p>
-              <p className="text-xs text-slate-500">
-                Your skills. Your goals.
-              </p>
-            </div>
-          </div>
-
-          <div className="absolute -bottom-5 -left-3 hidden items-center gap-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-xl sm:flex lg:-left-8">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-700">
-              <Zap size={21} />
-            </div>
-            <div>
-              <p className="text-sm font-bold text-slate-900">
-                Smarter career moves
-              </p>
-              <p className="text-xs text-slate-500">
-                One platform, more possibilities
-              </p>
+              <p className="text-sm font-bold text-slate-900">Career growth</p>
+              <p className="text-xs text-slate-400">Your journey starts here</p>
             </div>
           </div>
         </div>
@@ -385,28 +405,21 @@ function Hero({ onSearch }) {
   )
 }
 
-function Stats() {
+function StatsSection() {
   const stats = [
-    { value: 'AI', label: 'Smarter job discovery', icon: Sparkles },
-    { value: '24/7', label: 'Career tools access', icon: Clock3 },
-    { value: '1', label: 'Connected career space', icon: Globe2 },
-    { value: '360°', label: 'Career development', icon: TrendingUp },
+    ['10K+', 'Jobs discovered'],
+    ['5K+', 'Professionals'],
+    ['500+', 'Companies'],
+    ['95%', 'Profile satisfaction'],
   ]
 
   return (
-    <section className="border-y border-slate-100 bg-white">
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-5 py-9 sm:grid-cols-4 lg:px-8">
-        {stats.map(({ value, label, icon: Icon }) => (
-          <div key={label} className="flex items-center gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
-              <Icon size={21} />
-            </div>
-            <div>
-              <p className="text-xl font-extrabold text-slate-900">
-                {value}
-              </p>
-              <p className="text-xs text-slate-500 sm:text-sm">{label}</p>
-            </div>
+    <section className="border-y border-slate-100 bg-slate-50 py-10">
+      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-5 text-center md:grid-cols-4 lg:px-8">
+        {stats.map(([number, label]) => (
+          <div key={label}>
+            <p className="text-3xl font-extrabold text-slate-900">{number}</p>
+            <p className="mt-1 text-sm text-slate-500">{label}</p>
           </div>
         ))}
       </div>
@@ -414,220 +427,280 @@ function Stats() {
   )
 }
 
-function JobCard({ job, saved, onToggleSave }) {
-  return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-5 transition duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-xl hover:shadow-slate-200/50">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div
-            className={`flex h-12 w-12 items-center justify-center rounded-xl text-xl font-extrabold ${job.color}`}
-          >
-            {job.logo}
-          </div>
-          <div>
-            <h3 className="font-bold text-slate-900">{job.company}</h3>
-            <p className="text-xs text-slate-500">{job.posted}</p>
-          </div>
-        </div>
-
-        <button
-          onClick={() => onToggleSave(job.id)}
-          aria-label={saved ? 'Remove saved job' : 'Save job'}
-          aria-pressed={saved}
-          className={`rounded-lg border p-2 transition ${
-            saved
-              ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-              : 'border-slate-200 text-slate-500 hover:bg-slate-50'
-          }`}
-        >
-          <Bookmark size={18} fill={saved ? 'currentColor' : 'none'} />
-        </button>
-      </div>
-
-      <h3 className="mt-6 text-lg font-bold text-slate-900">
-        {job.role}
-      </h3>
-
-      <div className="mt-3 flex flex-wrap gap-2">
-        <span className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-600">
-          {job.type}
-        </span>
-        <span className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-600">
-          {job.experience}
-        </span>
-      </div>
-
-      <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-slate-500">
-        <span className="flex items-center gap-1.5">
-          <MapPin size={15} /> {job.location}
-        </span>
-      </div>
-
-      <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4">
-        <div>
-          <p className="font-bold text-slate-900">{job.salary}</p>
-          <p className="text-xs text-slate-500">Estimated salary</p>
-        </div>
-        <button className="flex items-center gap-1.5 text-sm font-bold text-emerald-700 transition hover:text-emerald-800">
-          View details <ArrowUpRight size={16} />
-        </button>
-      </div>
-    </article>
-  )
-}
-
-function JobsSection({ search }) {
-  const [savedJobs, setSavedJobs] = useState([])
+function JobsSection({ search, onClear }) {
+  const [bookmarked, setBookmarked] = useState([])
 
   const filteredJobs = useMemo(() => {
-    const keyword = search.keyword.toLowerCase().trim()
-    const location = search.location.toLowerCase().trim()
+    const keyword = search.keyword.trim().toLowerCase()
+    const location = search.location.trim().toLowerCase()
 
     return jobs.filter((job) => {
-      const searchable = [
+      const searchableText = [
         job.role,
         job.company,
         job.category,
         job.experience,
-      ].join(' ').toLowerCase()
+        ...(job.skills || []),
+      ]
+        .join(' ')
+        .toLowerCase()
+
+      const keywordTerms = keyword.split(/\s+/).filter(Boolean)
 
       const matchesKeyword =
         !keyword ||
-        searchable.includes(keyword) ||
-        (keyword.includes('remote') && job.location.toLowerCase().includes('remote')) ||
-        (keyword.includes('mern') && job.role.toLowerCase().includes('mern'))
+        keywordTerms.every((term) => searchableText.includes(term)) ||
+        (keyword.includes('remote') && job.location.toLowerCase().includes('remote'))
 
       const matchesLocation =
-        !location || job.location.toLowerCase().includes(location)
+        !location ||
+        job.location.toLowerCase().includes(location) ||
+        (location.includes('remote') && job.location.toLowerCase().includes('remote'))
 
       return matchesKeyword && matchesLocation
     })
   }, [search])
 
-  const toggleSave = (id) => {
-    setSavedJobs((previous) =>
+  const toggleBookmark = (id) => {
+    setBookmarked((previous) =>
       previous.includes(id)
-        ? previous.filter((jobId) => jobId !== id)
-        : [...previous, id]
+        ? previous.filter((item) => item !== id)
+        : [...previous, id],
     )
   }
 
   return (
-    <section id="jobs" className="bg-slate-50 py-20">
+    <section id="jobs" className="bg-white py-24">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
-        <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+        <div className="mb-12 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
-            <span className="text-sm font-bold tracking-wider text-emerald-700 uppercase">
-              Explore opportunities
-            </span>
-            <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+            <div className="mb-3 inline-flex items-center gap-2 text-sm font-bold text-emerald-600">
+              <BriefcaseBusiness size={17} />
+              EXPLORE OPPORTUNITIES
+            </div>
+            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
               Find your next opportunity
             </h2>
-            <p className="mt-3 text-slate-500">
-              Explore opportunities from companies looking for talent.
+            <p className="mt-3 max-w-xl text-slate-500">
+              Discover roles that align with your skills and career ambitions.
             </p>
           </div>
 
-          <span className="text-sm font-semibold text-slate-500">
-            {filteredJobs.length} sample opportunities
-          </span>
+          <a
+            href="#jobs"
+            className="inline-flex items-center gap-2 text-sm font-bold text-emerald-600 hover:text-emerald-700"
+          >
+            Explore all jobs <ArrowUpRight size={17} />
+          </a>
         </div>
 
-        {search.keyword || search.location ? (
-          <div className="mt-6 flex flex-wrap items-center gap-2 text-sm text-slate-600">
-            Showing results for:
-            {search.keyword && (
-              <span className="rounded-full bg-emerald-100 px-3 py-1 font-semibold text-emerald-800">
-                {search.keyword}
-              </span>
-            )}
-            {search.location && (
-              <span className="rounded-full bg-emerald-100 px-3 py-1 font-semibold text-emerald-800">
-                {search.location}
-              </span>
-            )}
+        {(search.keyword || search.location) && (
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-emerald-50 px-4 py-3">
+            <p className="text-sm text-emerald-800">
+              Showing results for{' '}
+              <strong>{search.keyword || 'all jobs'}</strong>
+              {search.location && ` in ${search.location}`}
+            </p>
             <button
-              onClick={() => window.dispatchEvent(new Event('clear-job-search'))}
-              className="font-semibold text-emerald-700 underline"
+              onClick={onClear}
+              className="text-sm font-bold text-emerald-700 hover:text-emerald-900"
             >
               Clear search
             </button>
           </div>
-        ) : null}
+        )}
 
-        <div className="mt-9 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-          {filteredJobs.map((job) => (
-            <JobCard
-              key={job.id}
-              job={job}
-              saved={savedJobs.includes(job.id)}
-              onToggleSave={toggleSave}
-            />
-          ))}
-        </div>
+        {filteredJobs.length > 0 ? (
+          <div className="grid gap-5 md:grid-cols-2">
+            {filteredJobs.map((job) => (
+              <article
+                key={job.id}
+                className="group rounded-2xl border border-slate-200 bg-white p-6 transition duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-xl hover:shadow-slate-200/50"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className={`flex h-14 w-14 items-center justify-center rounded-2xl text-lg font-extrabold ${job.logoColor}`}>
+                      {job.logo}
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-slate-900 transition group-hover:text-emerald-700">
+                        {job.role}
+                      </h3>
+                      <p className="mt-1 text-sm text-slate-500">{job.company}</p>
+                    </div>
+                  </div>
 
-        {filteredJobs.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-5 py-16 text-center">
-            <Search className="mx-auto text-slate-400" size={32} />
-            <h3 className="mt-4 text-lg font-bold text-slate-900">
-              No matching sample jobs found
-            </h3>
+                  <button
+                    onClick={() => toggleBookmark(job.id)}
+                    aria-label={bookmarked.includes(job.id) ? 'Remove bookmark' : 'Bookmark job'}
+                    className={`rounded-xl border p-2.5 transition ${
+                      bookmarked.includes(job.id)
+                        ? 'border-emerald-200 bg-emerald-50 text-emerald-600'
+                        : 'border-slate-200 text-slate-400 hover:border-emerald-200 hover:text-emerald-600'
+                    }`}
+                  >
+                    <Bookmark
+                      size={19}
+                      fill={bookmarked.includes(job.id) ? 'currentColor' : 'none'}
+                    />
+                  </button>
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-2">
+                  <span className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-600">
+                    {job.type}
+                  </span>
+                  <span className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-600">
+                    {job.experience}
+                  </span>
+                  <span className="rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
+                    {job.salary}
+                  </span>
+                </div>
+
+                <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-5">
+                  <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500">
+                    <span className="flex items-center gap-1.5">
+                      <MapPin size={14} /> {job.location}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Clock3 size={14} /> {job.posted}
+                    </span>
+                  </div>
+                  <button className="inline-flex items-center gap-2 text-sm font-bold text-emerald-600 transition hover:gap-3">
+                    View Details <ArrowRight size={16} />
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-slate-300 py-16 text-center">
+            <Search className="mx-auto text-slate-300" size={40} />
+            <h3 className="mt-4 text-lg font-bold text-slate-800">No jobs found</h3>
             <p className="mt-2 text-sm text-slate-500">
-              Try a different keyword or location.
+              Try another keyword or location.
             </p>
+            <button
+              onClick={onClear}
+              className="mt-5 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700"
+            >
+              Clear filters
+            </button>
           </div>
         )}
 
         <p className="mt-6 text-center text-xs text-slate-400">
-          These are demonstration listings for the homepage. Live job data
-          will be connected later.
+          These are sample listings for the homepage preview, not live job vacancies.
         </p>
       </div>
     </section>
   )
 }
 
-function Features() {
+function FeaturesSection() {
   return (
-    <section id="features" className="bg-white py-20">
+    <section id="features" className="bg-slate-50 py-24">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="text-sm font-bold tracking-wider text-emerald-700 uppercase">
-            Everything in one place
-          </span>
-          <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-            More than a job search platform
+        <div className="mx-auto mb-14 max-w-2xl text-center">
+          <div className="mb-3 inline-flex items-center gap-2 text-sm font-bold text-emerald-600">
+            <Sparkles size={17} /> BUILT FOR YOUR FUTURE
+          </div>
+          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+            Everything you need to grow
           </h2>
           <p className="mt-4 leading-7 text-slate-500">
-            The tools, connections and insights you need to build a career
-            with confidence.
+            More than a job portal. A complete career platform designed to
+            support every step of your professional journey.
           </p>
         </div>
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {features.map(({ icon: Icon, number, title, description }) => (
-            <article
-              key={number}
-              className="group rounded-2xl border border-slate-100 bg-white p-6 transition hover:-translate-y-1 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-900/5"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 transition group-hover:bg-emerald-600 group-hover:text-white">
-                  <Icon size={23} />
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {features.map((feature) => {
+            const Icon = feature.icon
+
+            return (
+              <div
+                key={feature.title}
+                className="rounded-2xl border border-slate-200 bg-white p-7 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/50"
+              >
+                <div className={`mb-6 flex h-14 w-14 items-center justify-center rounded-2xl ${feature.color}`}>
+                  <Icon size={26} />
                 </div>
-                <span className="text-sm font-bold text-slate-300">
-                  {number}
-                </span>
+                <h3 className="text-lg font-bold text-slate-900">
+                  {feature.title}
+                </h3>
+                <p className="mt-3 text-sm leading-7 text-slate-500">
+                  {feature.description}
+                </p>
+                <a
+                  href="#how-it-works"
+                  className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-emerald-600 hover:gap-3"
+                >
+                  Learn more <ArrowRight size={16} />
+                </a>
               </div>
-              <h3 className="mt-7 text-lg font-bold text-slate-900">
-                {title}
-              </h3>
-              <p className="mt-3 text-sm leading-7 text-slate-500">
-                {description}
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function HowItWorksSection() {
+  const steps = [
+    {
+      number: '01',
+      title: 'Build your profile',
+      description:
+        'Add your education, experience, skills and career preferences.',
+    },
+    {
+      number: '02',
+      title: 'Get AI recommendations',
+      description:
+        'Let AI analyze your profile and find relevant career opportunities.',
+    },
+    {
+      number: '03',
+      title: 'Apply and grow',
+      description:
+        'Discover opportunities, connect with professionals and move forward.',
+    },
+  ]
+
+  return (
+    <section id="how-it-works" className="bg-white py-24">
+      <div className="mx-auto max-w-7xl px-5 lg:px-8">
+        <div className="mx-auto mb-14 max-w-2xl text-center">
+          <div className="mb-3 text-sm font-bold text-emerald-600">
+            SIMPLE PROCESS
+          </div>
+          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+            Your career journey starts here
+          </h2>
+          <p className="mt-4 text-slate-500">
+            Three simple steps to make your next career move.
+          </p>
+        </div>
+
+        <div className="grid gap-8 md:grid-cols-3">
+          {steps.map((step, index) => (
+            <div key={step.number} className="relative text-center">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 text-xl font-extrabold text-emerald-600">
+                {step.number}
+              </div>
+              <h3 className="text-xl font-bold text-slate-900">{step.title}</h3>
+              <p className="mx-auto mt-3 max-w-xs text-sm leading-7 text-slate-500">
+                {step.description}
               </p>
-              <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-emerald-700">
-                Explore feature <ArrowRight size={15} />
-              </div>
-            </article>
+              {index < 2 && (
+                <div className="absolute right-0 top-8 hidden -translate-y-1/2 translate-x-1/2 text-slate-300 md:block">
+                  <ArrowRight size={25} />
+                </div>
+              )}
+            </div>
           ))}
         </div>
       </div>
@@ -635,134 +708,23 @@ function Features() {
   )
 }
 
-function HowItWorks() {
-  const steps = [
-    {
-      number: '01',
-      title: 'Create your profile',
-      description:
-        'Tell us about your education, experience, skills and career goals.',
-    },
-    {
-      number: '02',
-      title: 'Discover your matches',
-      description:
-        'Explore relevant career opportunities based on your professional profile.',
-    },
-    {
-      number: '03',
-      title: 'Take your next step',
-      description:
-        'Apply for jobs, build your resume and connect with professionals.',
-    },
-  ]
-
+function CTASection() {
   return (
-    <section id="how-it-works" className="bg-slate-50 py-20">
-      <div className="mx-auto max-w-7xl px-5 lg:px-8">
-        <div className="grid items-center gap-14 lg:grid-cols-2">
-          <div>
-            <span className="text-sm font-bold tracking-wider text-emerald-700 uppercase">
-              Simple process
-            </span>
-            <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-              Your career journey, simplified.
-            </h2>
-            <p className="mt-5 max-w-lg leading-7 text-slate-500">
-              One connected platform to help you move from discovering
-              opportunities to growing your professional network.
-            </p>
-
-            <div className="mt-9 space-y-7">
-              {steps.map((step) => (
-                <div key={step.number} className="flex gap-5">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-100 font-bold text-emerald-700">
-                    {step.number}
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-slate-900">
-                      {step.title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-6 text-slate-500">
-                      {step.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="rounded-3xl border border-slate-100 bg-white p-7 shadow-xl shadow-slate-200/50 sm:p-10">
-            <div className="flex items-center justify-between">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
-                <Sparkles size={24} />
-              </div>
-              <span className="rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700">
-                CareerAI
-              </span>
-            </div>
-
-            <h3 className="mt-8 text-2xl font-extrabold text-slate-900">
-              Build a career that reflects your potential.
-            </h3>
-            <p className="mt-3 leading-7 text-slate-500">
-              Bring your skills, experience and ambitions together in one
-              professional space.
-            </p>
-
-            <div className="mt-7 space-y-4">
-              {[
-                'Professional profile and skills',
-                'AI-assisted resume creation',
-                'Personalized job discovery',
-                'Professional networking',
-              ].map((item) => (
-                <div key={item} className="flex items-center gap-3">
-                  <CheckCircle2 className="shrink-0 text-emerald-600" size={19} />
-                  <span className="text-sm font-medium text-slate-700">
-                    {item}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            <a
-              href="#jobs"
-              className="mt-9 flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-4 font-semibold text-white transition hover:bg-emerald-700"
-            >
-              Explore opportunities <ArrowRight size={18} />
-            </a>
-          </div>
+    <section className="px-5 pb-24 lg:px-8">
+      <div className="mx-auto max-w-7xl overflow-hidden rounded-3xl bg-emerald-600 px-7 py-16 text-center sm:px-12">
+        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 text-white">
+          <Globe2 size={28} />
         </div>
-      </div>
-    </section>
-  )
-}
-
-function CTA() {
-  return (
-    <section className="bg-white px-5 py-20 lg:px-8">
-      <div className="relative mx-auto max-w-7xl overflow-hidden rounded-3xl bg-emerald-700 px-7 py-16 text-center sm:px-12">
-        <div className="pointer-events-none absolute -right-20 -top-32 h-80 w-80 rounded-full bg-emerald-500/50 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-40 -left-20 h-80 w-80 rounded-full bg-teal-400/30 blur-3xl" />
-
-        <div className="relative mx-auto max-w-2xl">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 text-white">
-            <Sparkles size={27} />
-          </div>
-          <h2 className="mt-7 text-3xl leading-tight font-extrabold text-white sm:text-4xl">
-            Ready to make your next career move?
-          </h2>
-          <p className="mt-5 leading-7 text-emerald-50">
-            Start building your professional future with CareerAI.
-          </p>
-          <a
-            href="#jobs"
-            className="mt-8 inline-flex items-center gap-2 rounded-xl bg-white px-7 py-4 font-bold text-emerald-800 transition hover:bg-emerald-50"
-          >
-            Explore CareerAI <ArrowRight size={18} />
-          </a>
-        </div>
+        <h2 className="mx-auto max-w-2xl text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+          Ready to take the next step in your career?
+        </h2>
+        <p className="mx-auto mt-5 max-w-xl leading-7 text-emerald-50">
+          Create your professional profile, discover opportunities and let
+          CareerAI help you move toward your goals.
+        </p>
+        <button className="mt-8 rounded-xl bg-white px-7 py-3.5 text-sm font-bold text-emerald-700 shadow-lg transition hover:bg-emerald-50">
+          Create Your Free Account <ArrowRight className="ml-2 inline" size={17} />
+        </button>
       </div>
     </section>
   )
@@ -770,54 +732,37 @@ function CTA() {
 
 function Footer() {
   return (
-    <footer id="footer" className="bg-slate-950 text-white">
-      <div className="mx-auto grid max-w-7xl gap-12 px-5 py-14 sm:grid-cols-2 lg:grid-cols-4 lg:px-8">
-        <div className="sm:col-span-2">
-          <a href="#home" className="inline-flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600">
-              <Sparkles size={21} />
+    <footer className="border-t border-slate-100 bg-white">
+      <div className="mx-auto flex max-w-7xl flex-col justify-between gap-8 px-5 py-10 md:flex-row md:items-center lg:px-8">
+        <div>
+          <a href="#home" className="flex items-center gap-2">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600 text-white">
+              <Sparkles size={19} />
             </div>
-            <span className="text-2xl font-extrabold">
-              Career<span className="text-emerald-400">AI</span>
+            <span className="text-xl font-extrabold text-slate-900">
+              Career<span className="text-emerald-600">AI</span>
             </span>
           </a>
-          <p className="mt-5 max-w-sm text-sm leading-7 text-slate-400">
-            A connected career platform designed to help people discover
-            opportunities, grow professionally and build meaningful
-            connections.
+          <p className="mt-3 text-sm text-slate-500">
+            Empowering careers with intelligent technology.
           </p>
         </div>
 
-        <div>
-          <h3 className="font-bold">Explore</h3>
-          <div className="mt-5 flex flex-col gap-3 text-sm text-slate-400">
-            <a href="#jobs" className="hover:text-emerald-400">Find jobs</a>
-            <a href="#features" className="hover:text-emerald-400">AI features</a>
-            <a href="#how-it-works" className="hover:text-emerald-400">How it works</a>
-          </div>
+        <div className="flex flex-wrap gap-6 text-sm text-slate-500">
+          <a href="#jobs" className="hover:text-emerald-600">Find Jobs</a>
+          <a href="#features" className="hover:text-emerald-600">Features</a>
+          <a href="#how-it-works" className="hover:text-emerald-600">How It Works</a>
         </div>
 
-        <div>
-          <h3 className="font-bold">Platform</h3>
-          <div className="mt-5 flex flex-col gap-3 text-sm text-slate-400">
-            <a href="#features" className="hover:text-emerald-400">Resume builder</a>
-            <a href="#features" className="hover:text-emerald-400">Networking</a>
-            <a href="#footer" className="hover:text-emerald-400">About us</a>
-          </div>
-        </div>
-      </div>
-
-      <div className="border-t border-slate-800">
-        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-3 px-5 py-6 text-xs text-slate-500 sm:flex-row lg:px-8">
-          <p>© {new Date().getFullYear()} CareerAI. All rights reserved.</p>
-          <p>Built to move careers forward.</p>
-        </div>
+        <p className="text-xs text-slate-400">
+          © {new Date().getFullYear()} CareerAI. All rights reserved.
+        </p>
       </div>
     </footer>
   )
 }
 
-export default function Home() {
+function Home() {
   const [search, setSearch] = useState({
     keyword: '',
     location: '',
@@ -825,23 +770,27 @@ export default function Home() {
 
   const handleSearch = (keyword, location) => {
     setSearch({ keyword, location })
-    document.getElementById('jobs')?.scrollIntoView({
-      behavior: 'smooth',
-    })
+    document.getElementById('jobs')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const clearSearch = () => {
+    setSearch({ keyword: '', location: '' })
   }
 
   return (
-    <div className="min-h-screen bg-white font-sans text-slate-900">
+    <>
       <Navbar />
       <main>
-        <Hero onSearch={handleSearch} />
-        <Stats />
-        <JobsSection search={search} />
-        <Features />
-        <HowItWorks />
-        <CTA />
+        <HeroSection onSearch={handleSearch} />
+        <StatsSection />
+        <JobsSection search={search} onClear={clearSearch} />
+        <FeaturesSection />
+        <HowItWorksSection />
+        <CTASection />
       </main>
       <Footer />
-    </div>
+    </>
   )
 }
+
+export default Home
