@@ -1,8 +1,16 @@
 
-import User from '../models/user.js'
-import generateToken from '../config/generateToken.js'
+import user from '../models/user.js'
+import jwt from 'jsonwebtoken'
 
-// REGISTER USER
+const generateToken = (userId) => {
+  return jwt.sign(
+    { id: userId },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN || '7d' },
+  )
+}
+
+// POST /api/auth/register
 export const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body
@@ -10,63 +18,68 @@ export const registerUser = async (req, res) => {
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
-        message: 'Please provide name, email and password',
+        message: 'Name, email and password are required.',
       })
     }
 
     if (password.length < 8) {
       return res.status(400).json({
         success: false,
-        message: 'Password must contain at least 8 characters',
+        message: 'Password must contain at least 8 characters.',
       })
     }
 
     const normalizedEmail = email.trim().toLowerCase()
 
-    const existingUser = await User.findOne({
+    const existingUser = await user.findOne({
       email: normalizedEmail,
     })
 
     if (existingUser) {
       return res.status(409).json({
         success: false,
-        message: 'Email already registered',
+        message: 'An account with this email already exists.',
       })
     }
 
-    // Public registration always creates a job seeker.
-    // Users cannot assign themselves recruiter/admin privileges.
-    const user = await User.create({
-      name,
+    const newUser = await user.create({
+      name: name.trim(),
       email: normalizedEmail,
       password,
       role: 'job_seeker',
     })
 
-    const token = generateToken(user._id, user.role)
+    const token = generateToken(newUser._id)
 
     return res.status(201).json({
       success: true,
-      message: 'Registration successful',
+      message: 'Account created successfully.',
       token,
       user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
       },
     })
   } catch (error) {
-    console.error('Registration error:', error.message)
+    console.error('Registration error:', error)
+
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        message: 'An account with this email already exists.',
+      })
+    }
 
     return res.status(500).json({
       success: false,
-      message: 'Server error during registration',
+      message: 'Server error while creating your account.',
     })
   }
 }
 
-// LOGIN USER
+// POST /api/auth/login
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body
@@ -74,47 +87,51 @@ export const loginUser = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message: 'Please provide email and password',
+        message: 'Email and password are required.',
       })
     }
 
-    const user = await User.findOne({
-      email: email.trim().toLowerCase(),
+    const normalizedEmail = email.trim().toLowerCase()
+
+    const existingUser = await user.findOne({
+      email: normalizedEmail,
     }).select('+password')
 
-    if (!user || !(await user.comparePassword(password))) {
+    if (!existingUser || !existingUser.isActive) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid email or password',
+        message: 'Invalid email or password.',
       })
     }
 
-    if (!user.isActive) {
-      return res.status(403).json({
+    const isPasswordValid = await existingUser.comparePassword(password)
+
+    if (!isPasswordValid) {
+      return res.status(401).json({
         success: false,
-        message: 'Your account is inactive',
+        message: 'Invalid email or password.',
       })
     }
 
-    const token = generateToken(user._id, user.role)
+    const token = generateToken(existingUser._id)
 
     return res.status(200).json({
       success: true,
-      message: 'Login successful',
+      message: 'Login successful.',
       token,
       user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
+        id: existingUser._id,
+        name: existingUser.name,
+        email: existingUser.email,
+        role: existingUser.role,
       },
     })
   } catch (error) {
-    console.error('Login error:', error.message)
+    console.error('Login error:', error)
 
     return res.status(500).json({
       success: false,
-      message: 'Server error during login',
+      message: 'Server error while logging in.',
     })
   }
 }
