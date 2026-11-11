@@ -1,11 +1,13 @@
 
 import { Routes, Route } from 'react-router-dom'
+
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import ProfileSetup from './pages/ProfileSetup'
 import Jobs from './pages/Jobs'
 import JobDetails from './pages/JobDetails'
+import SavedJobs from './pages/SavedJobs'
 
 function App() {
   return (
@@ -16,6 +18,7 @@ function App() {
       <Route path="/profile-setup" element={<ProfileSetup />} />
       <Route path="/jobs" element={<Jobs />} />
       <Route path="/jobs/:id" element={<JobDetails />} />
+      <Route path="/saved-jobs" element={<SavedJobs />} />
     </Routes>
   )
 }
