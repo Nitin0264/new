@@ -9,6 +9,8 @@ import Jobs from './pages/Jobs'
 import JobDetails from './pages/JobDetails'
 import SavedJobs from './pages/SavedJobs'
 import Dashboard from './pages/Dashboard'
+import ResumeBuilder from './pages/ResumeBuilder'
+import ResumeEnhancer from './pages/ResumeEnhancer'
 
 function App() {
   return (
@@ -24,6 +26,9 @@ function App() {
       <Route path="/jobs" element={<Jobs />} />
       <Route path="/jobs/:id" element={<JobDetails />} />
       <Route path="/saved-jobs" element={<SavedJobs />} />
+
+      <Route path="/resume-builder" element={<ResumeBuilder />} />
+      <Route path="/resume-enhancer" element={<ResumeEnhancer />} />
     </Routes>
   )
 }
