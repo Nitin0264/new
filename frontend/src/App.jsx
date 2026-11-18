@@ -11,6 +11,7 @@ import SavedJobs from './pages/SavedJobs'
 import Dashboard from './pages/Dashboard'
 import ResumeBuilder from './pages/ResumeBuilder'
 import ResumeEnhancer from './pages/ResumeEnhancer'
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -29,7 +30,9 @@ function App() {
 
       <Route path="/resume-builder" element={<ResumeBuilder />} />
       <Route path="/resume-enhancer" element={<ResumeEnhancer />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
+    
   )
 }
 
