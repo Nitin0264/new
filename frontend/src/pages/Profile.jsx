@@ -1,6 +1,8 @@
 
 import { useEffect, useState } from "react";
 import api from "../api/axios";
+import Experience from "../components/profile/Experience";
+import Projects from "../components/profile/Projects";
 
 const emptyProfile = {
   name: "",
