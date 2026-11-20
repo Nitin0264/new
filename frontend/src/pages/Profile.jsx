@@ -139,77 +139,21 @@ function Profile() {
             </div>
           </section>
 
-          <section className="rounded-2xl bg-white p-6 shadow-sm">
-            <h2 className="mb-5 text-xl font-semibold">
-              Education
-            </h2>
+  
+<Experience
+  experience={profile.experience || []}
+  setExperience={(experience) =>
+    setProfile((prev) => ({ ...prev, experience }))
+  }
+/>
 
-            {profile.education.map((item, index) => (
-              <div key={index} className="mb-4 grid gap-4 sm:grid-cols-2">
-                {[
-                  ["institution", "Institution"],
-                  ["degree", "Degree"],
-                  ["fieldOfStudy", "Field of Study"],
-                  ["startYear", "Start Year"],
-                  ["endYear", "End Year"],
-                  ["grade", "Grade / Percentage"],
-                ].map(([field, label]) => (
-                  <input
-                    key={field}
-                    placeholder={label}
-                    value={item[field] || ""}
-                    onChange={(e) => {
-                      const education = [...profile.education];
-                      education[index] = {
-                        ...education[index],
-                        [field]: e.target.value,
-                      };
-                      setProfile({ ...profile, education });
-                    }}
-                    className="rounded-lg border border-slate-200 p-3"
-                  />
-                ))}
+<Projects
+  projects={profile.projects || []}
+  setProjects={(projects) =>
+    setProfile((prev) => ({ ...prev, projects }))
+  }
+/>
 
-                <button
-                  type="button"
-                  onClick={() =>
-                    setProfile((prev) => ({
-                      ...prev,
-                      education: prev.education.filter(
-                        (_, i) => i !== index
-                      ),
-                    }))
-                  }
-                  className="text-left text-sm text-red-500"
-                >
-                  Remove education
-                </button>
-              </div>
-            ))}
-
-            <button
-              type="button"
-              onClick={() =>
-                setProfile((prev) => ({
-                  ...prev,
-                  education: [
-                    ...prev.education,
-                    {
-                      institution: "",
-                      degree: "",
-                      fieldOfStudy: "",
-                      startYear: "",
-                      endYear: "",
-                      grade: "",
-                    },
-                  ],
-                }))
-              }
-              className="font-medium text-blue-600"
-            >
-              + Add Education
-            </button>
-          </section>
 
           <section className="rounded-2xl bg-white p-6 shadow-sm">
             <h2 className="mb-5 text-xl font-semibold">
