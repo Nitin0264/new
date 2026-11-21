@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import api from "../api/axios";
 import Experience from "../components/profile/Experience";
 import Projects from "../components/profile/Projects";
+import ProfileProgress from "../components/profile/ProfileProgress";
 
 const emptyProfile = {
   name: "",
@@ -95,7 +96,7 @@ function Profile() {
             Complete your profile to receive better AI-powered job matches.
           </p>
         </div>
-
+            <ProfileProgress profile={profile} />
         <form onSubmit={handleSubmit} className="space-y-6">
           <section className="rounded-2xl bg-white p-6 shadow-sm">
             <h2 className="mb-5 text-xl font-semibold">
