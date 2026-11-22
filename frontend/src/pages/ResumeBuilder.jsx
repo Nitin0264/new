@@ -6,6 +6,7 @@ import {
   UserRound,
   GraduationCap,
   BriefcaseBusiness,
+  Code,
   Code2,
   Sparkles,
   Plus,
@@ -16,8 +17,6 @@ import {
   Mail,
   Phone,
   MapPin,
-  Linkedin,
-  Github,
 } from 'lucide-react'
 
 const initialForm = {
@@ -631,12 +630,12 @@ function ResumeBuilder() {
                     )}
                     {formData.linkedin && (
                       <span className="flex items-center gap-1 break-all">
-                        <Linkedin size={13} /> {formData.linkedin}
+                        <span className="inline-flex h-4 w-4 items-center justify-center rounded-sm bg-blue-700 text-[10px] font-bold text-white">in</span> {formData.linkedin}
                       </span>
                     )}
                     {formData.github && (
                       <span className="flex items-center gap-1 break-all">
-                        <Github size={13} /> {formData.github}
+                        <Code size={13} /> {formData.github}
                       </span>
                     )}
                   </div>
