@@ -1,5 +1,6 @@
 
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import {
   ArrowRight,
   ArrowUpRight,
@@ -149,12 +150,12 @@ function Navbar() {
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
-          <button className="rounded-xl px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
+          <Link to="/login" className="rounded-xl px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
             Log in
-          </button>
-          <button className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-200 transition hover:bg-emerald-700">
+          </Link>
+          <Link to="/register" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-200 transition hover:bg-emerald-700">
             Get Started <ArrowRight className="ml-1 inline" size={16} />
-          </button>
+          </Link>
         </div>
 
         <button
@@ -185,12 +186,12 @@ function Navbar() {
               </a>
             ))}
             <div className="flex gap-3 border-t border-slate-100 pt-4">
-              <button className="flex-1 rounded-xl border border-slate-200 py-2.5 font-semibold text-slate-700">
+              <Link to="/login" onClick={closeMenu} className="flex-1 rounded-xl border border-slate-200 py-2.5 text-center font-semibold text-slate-700">
                 Log in
-              </button>
-              <button className="flex-1 rounded-xl bg-emerald-600 py-2.5 font-semibold text-white">
+              </Link>
+              <Link to="/register" onClick={closeMenu} className="flex-1 rounded-xl bg-emerald-600 py-2.5 text-center font-semibold text-white">
                 Get Started
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -722,9 +723,9 @@ function CTASection() {
           Create your professional profile, discover opportunities and let
           CareerAI help you move toward your goals.
         </p>
-        <button className="mt-8 rounded-xl bg-white px-7 py-3.5 text-sm font-bold text-emerald-700 shadow-lg transition hover:bg-emerald-50">
+        <Link to="/register" className="mt-8 inline-block rounded-xl bg-white px-7 py-3.5 text-sm font-bold text-emerald-700 shadow-lg transition hover:bg-emerald-50">
           Create Your Free Account <ArrowRight className="ml-2 inline" size={17} />
-        </button>
+        </Link>
       </div>
     </section>
   )

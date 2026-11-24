@@ -23,10 +23,11 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
 
+    // User Role
     role: {
       type: String,
-      enum: ["user", "admin", "recruiter"],
-      default: "user",
+      enum: ["job_seeker", "recruiter", "admin"],
+      default: "job_seeker",
     },
 
     profilePicture: {
@@ -113,7 +114,13 @@ const userSchema = new mongoose.Schema(
 
     availability: {
       type: String,
-      enum: ["immediately", "15-days", "30-days", "60-days", "not-looking"],
+      enum: [
+        "immediately",
+        "15-days",
+        "30-days",
+        "60-days",
+        "not-looking",
+      ],
       default: "immediately",
     },
 
