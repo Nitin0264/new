@@ -1,16 +1,28 @@
 
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   ArrowRight,
   BriefcaseBusiness,
   Eye,
   EyeOff,
   Sparkles,
+  LoaderCircle,
+  CheckCircle,
+  AlertCircle,
 } from 'lucide-react'
+import api from '../api/axios'
 
 function Register() {
+  const navigate = useNavigate()
+
   const [showPassword, setShowPassword] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState({
+    type: '',
+    text: '',
+  })
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -23,22 +35,67 @@ function Register() {
       ...formData,
       [event.target.name]: event.target.value,
     })
+
+    setMessage({ type: '', text: '' })
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
+    setMessage({ type: '', text: '' })
 
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match.')
+      setMessage({
+        type: 'error',
+        text: 'Passwords do not match.',
+      })
       return
     }
 
     if (formData.password.length < 8) {
-      alert('Password must contain at least 8 characters.')
+      setMessage({
+        type: 'error',
+        text: 'Password must contain at least 8 characters.',
+      })
       return
     }
 
-    alert('Registration UI is ready. Backend integration is our next step.')
+    try {
+      setLoading(true)
+
+      const response = await api.post('/auth/register', {
+        name: formData.name.trim(),
+        email: formData.email.trim().toLowerCase(),
+        password: formData.password,
+      })
+
+      const { token, user } = response.data
+
+      if (!token || !user) {
+        throw new Error('Registration response is missing authentication details.')
+      }
+
+      localStorage.setItem('token', token)
+      localStorage.setItem('user', JSON.stringify(user))
+
+      setMessage({
+        type: 'success',
+        text: 'Account created successfully! Redirecting...',
+      })
+
+      navigate('/profile-setup', { replace: true })
+    } catch (error) {
+      console.error('Registration error:', error)
+
+      setMessage({
+        type: 'error',
+        text:
+          error.response?.data?.message ||
+          error.message ||
+          'Unable to register. Please try again.',
+      })
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -69,7 +126,10 @@ function Register() {
 
       <div className="flex w-full items-center justify-center px-5 py-12 lg:w-1/2">
         <div className="w-full max-w-md">
-          <Link to="/" className="mb-8 flex items-center gap-2 text-xl font-extrabold text-slate-900 lg:hidden">
+          <Link
+            to="/"
+            className="mb-8 flex items-center gap-2 text-xl font-extrabold text-slate-900 lg:hidden"
+          >
             <Sparkles className="text-emerald-600" />
             CareerAI
           </Link>
@@ -85,6 +145,24 @@ function Register() {
               Join CareerAI and take the next step in your professional journey.
             </p>
           </div>
+
+          {message.text && (
+            <div
+              role="alert"
+              className={`mb-5 flex items-start gap-3 rounded-xl p-4 text-sm ${
+                message.type === 'success'
+                  ? 'bg-emerald-50 text-emerald-700'
+                  : 'bg-red-50 text-red-700'
+              }`}
+            >
+              {message.type === 'success' ? (
+                <CheckCircle size={19} className="mt-0.5 shrink-0" />
+              ) : (
+                <AlertCircle size={19} className="mt-0.5 shrink-0" />
+              )}
+              <span>{message.text}</span>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -102,7 +180,8 @@ function Register() {
                 minLength={2}
                 maxLength={60}
                 autoComplete="name"
-                className="w-full rounded-xl border border-slate-200 px-4 py-3.5 text-sm outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50"
+                disabled={loading}
+                className="w-full rounded-xl border border-slate-200 px-4 py-3.5 text-sm outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50 disabled:bg-slate-100"
               />
             </div>
 
@@ -119,7 +198,8 @@ function Register() {
                 placeholder="you@example.com"
                 required
                 autoComplete="email"
-                className="w-full rounded-xl border border-slate-200 px-4 py-3.5 text-sm outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50"
+                disabled={loading}
+                className="w-full rounded-xl border border-slate-200 px-4 py-3.5 text-sm outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50 disabled:bg-slate-100"
               />
             </div>
 
@@ -138,7 +218,8 @@ function Register() {
                   required
                   minLength={8}
                   autoComplete="new-password"
-                  className="w-full rounded-xl border border-slate-200 px-4 py-3.5 pr-12 text-sm outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50"
+                  disabled={loading}
+                  className="w-full rounded-xl border border-slate-200 px-4 py-3.5 pr-12 text-sm outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50 disabled:bg-slate-100"
                 />
                 <button
                   type="button"
@@ -164,15 +245,26 @@ function Register() {
                 placeholder="Re-enter your password"
                 required
                 autoComplete="new-password"
-                className="w-full rounded-xl border border-slate-200 px-4 py-3.5 text-sm outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50"
+                disabled={loading}
+                className="w-full rounded-xl border border-slate-200 px-4 py-3.5 text-sm outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50 disabled:bg-slate-100"
               />
             </div>
 
             <button
               type="submit"
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3.5 text-sm font-bold text-white transition hover:bg-emerald-700"
+              disabled={loading}
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3.5 text-sm font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-70"
             >
-              Create Account <ArrowRight size={17} />
+              {loading ? (
+                <>
+                  <LoaderCircle size={18} className="animate-spin" />
+                  Creating account...
+                </>
+              ) : (
+                <>
+                  Create Account <ArrowRight size={17} />
+                </>
+              )}
             </button>
           </form>
 
@@ -183,7 +275,10 @@ function Register() {
             </Link>
           </p>
 
-          <Link to="/" className="mt-7 block text-center text-sm text-slate-400 hover:text-emerald-600">
+          <Link
+            to="/"
+            className="mt-7 block text-center text-sm text-slate-400 hover:text-emerald-600"
+          >
             ← Back to homepage
           </Link>
         </div>

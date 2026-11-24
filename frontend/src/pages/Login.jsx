@@ -1,10 +1,28 @@
 
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { ArrowRight, BriefcaseBusiness, Eye, EyeOff, Sparkles } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
+import {
+  ArrowRight,
+  BriefcaseBusiness,
+  Eye,
+  EyeOff,
+  Sparkles,
+  LoaderCircle,
+  CheckCircle,
+  AlertCircle,
+} from 'lucide-react'
+import api from '../api/axios'
 
 function Login() {
+  const navigate = useNavigate()
+
   const [showPassword, setShowPassword] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState({
+    type: '',
+    text: '',
+  })
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -15,11 +33,50 @@ function Login() {
       ...formData,
       [event.target.name]: event.target.value,
     })
+
+    setMessage({ type: '', text: '' })
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    alert('Login UI is ready. Backend integration is our next step.')
+    setMessage({ type: '', text: '' })
+
+    try {
+      setLoading(true)
+
+      const response = await api.post('/auth/login', {
+        email: formData.email.trim().toLowerCase(),
+        password: formData.password,
+      })
+
+      const { token, user } = response.data
+
+      if (!token || !user) {
+        throw new Error('Login response is missing authentication details.')
+      }
+
+      localStorage.setItem('token', token)
+      localStorage.setItem('user', JSON.stringify(user))
+
+      setMessage({
+        type: 'success',
+        text: 'Login successful! Redirecting...',
+      })
+
+      navigate('/dashboard', { replace: true })
+    } catch (error) {
+      console.error('Login error:', error)
+
+      setMessage({
+        type: 'error',
+        text:
+          error.response?.data?.message ||
+          error.message ||
+          'Unable to log in. Please try again.',
+      })
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -50,7 +107,10 @@ function Login() {
 
       <div className="flex w-full items-center justify-center px-5 py-12 lg:w-1/2">
         <div className="w-full max-w-md">
-          <Link to="/" className="mb-10 flex items-center gap-2 text-xl font-extrabold text-slate-900 lg:hidden">
+          <Link
+            to="/"
+            className="mb-10 flex items-center gap-2 text-xl font-extrabold text-slate-900 lg:hidden"
+          >
             <Sparkles className="text-emerald-600" />
             CareerAI
           </Link>
@@ -67,6 +127,24 @@ function Login() {
             </p>
           </div>
 
+          {message.text && (
+            <div
+              role="alert"
+              className={`mb-5 flex items-start gap-3 rounded-xl p-4 text-sm ${
+                message.type === 'success'
+                  ? 'bg-emerald-50 text-emerald-700'
+                  : 'bg-red-50 text-red-700'
+              }`}
+            >
+              {message.type === 'success' ? (
+                <CheckCircle size={19} className="mt-0.5 shrink-0" />
+              ) : (
+                <AlertCircle size={19} className="mt-0.5 shrink-0" />
+              )}
+              <span>{message.text}</span>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label htmlFor="email" className="mb-2 block text-sm font-semibold text-slate-700">
@@ -81,7 +159,8 @@ function Login() {
                 placeholder="you@example.com"
                 required
                 autoComplete="email"
-                className="w-full rounded-xl border border-slate-200 px-4 py-3.5 text-sm outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50"
+                disabled={loading}
+                className="w-full rounded-xl border border-slate-200 px-4 py-3.5 text-sm outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50 disabled:bg-slate-100"
               />
             </div>
 
@@ -99,7 +178,8 @@ function Login() {
                   placeholder="Enter your password"
                   required
                   autoComplete="current-password"
-                  className="w-full rounded-xl border border-slate-200 px-4 py-3.5 pr-12 text-sm outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50"
+                  disabled={loading}
+                  className="w-full rounded-xl border border-slate-200 px-4 py-3.5 pr-12 text-sm outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50 disabled:bg-slate-100"
                 />
                 <button
                   type="button"
@@ -113,16 +193,33 @@ function Login() {
             </div>
 
             <div className="flex justify-end">
-              <button type="button" className="text-sm font-semibold text-emerald-600 hover:text-emerald-700">
+              <button
+                type="button"
+                onClick={() => setMessage({
+                  type: 'error',
+                  text: 'Password recovery is not available yet.',
+                })}
+                className="text-sm font-semibold text-emerald-600 hover:text-emerald-700"
+              >
                 Forgot password?
               </button>
             </div>
 
             <button
               type="submit"
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3.5 text-sm font-bold text-white transition hover:bg-emerald-700"
+              disabled={loading}
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3.5 text-sm font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-70"
             >
-              Sign In <ArrowRight size={17} />
+              {loading ? (
+                <>
+                  <LoaderCircle size={18} className="animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                <>
+                  Sign In <ArrowRight size={17} />
+                </>
+              )}
             </button>
           </form>
 
@@ -133,7 +230,10 @@ function Login() {
             </Link>
           </p>
 
-          <Link to="/" className="mt-8 block text-center text-sm text-slate-400 hover:text-emerald-600">
+          <Link
+            to="/"
+            className="mt-8 block text-center text-sm text-slate-400 hover:text-emerald-600"
+          >
             ← Back to homepage
           </Link>
         </div>
