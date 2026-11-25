@@ -1,12 +1,18 @@
 
 import user from '../models/user.js'
 import jwt from 'jsonwebtoken'
+import bcrypt from 'bcryptjs'
 
+// Generate JWT Token
 const generateToken = (userId) => {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET is missing from environment variables.')
+  }
+
   return jwt.sign(
     { id: userId },
     process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES_IN || '7d' },
+    { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
   )
 }
 
@@ -29,6 +35,13 @@ export const registerUser = async (req, res) => {
       })
     }
 
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({
+        success: false,
+        message: 'Authentication configuration error.',
+      })
+    }
+
     const normalizedEmail = email.trim().toLowerCase()
 
     const existingUser = await user.findOne({
@@ -42,10 +55,13 @@ export const registerUser = async (req, res) => {
       })
     }
 
+    // Hash password before saving
+    const hashedPassword = await bcrypt.hash(password, 10)
+
     const newUser = await user.create({
       name: name.trim(),
       email: normalizedEmail,
-      password,
+      password: hashedPassword,
       role: 'job_seeker',
     })
 
@@ -62,6 +78,7 @@ export const registerUser = async (req, res) => {
         role: newUser.role,
       },
     })
+
   } catch (error) {
     console.error('Registration error:', error)
 
@@ -91,20 +108,31 @@ export const loginUser = async (req, res) => {
       })
     }
 
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({
+        success: false,
+        message: 'Authentication configuration error.',
+      })
+    }
+
     const normalizedEmail = email.trim().toLowerCase()
 
     const existingUser = await user.findOne({
       email: normalizedEmail,
     }).select('+password')
 
-    if (!existingUser || !existingUser.isActive) {
+    if (!existingUser) {
       return res.status(401).json({
         success: false,
         message: 'Invalid email or password.',
       })
     }
 
-    const isPasswordValid = await existingUser.comparePassword(password)
+    // Compare entered password with stored hashed password
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      existingUser.password
+    )
 
     if (!isPasswordValid) {
       return res.status(401).json({
@@ -126,6 +154,7 @@ export const loginUser = async (req, res) => {
         role: existingUser.role,
       },
     })
+
   } catch (error) {
     console.error('Login error:', error)
 
