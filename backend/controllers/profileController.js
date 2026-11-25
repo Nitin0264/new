@@ -4,7 +4,7 @@ import User from "../models/user.js";
 // Get logged-in user's profile
 export const getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("-password");
+    const user = await User.findById(req.user._id).select("-password");
 
     if (!user) {
       return res.status(404).json({
@@ -13,14 +13,16 @@ export const getProfile = async (req, res) => {
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       user,
     });
   } catch (error) {
-    res.status(500).json({
+    console.error("Get profile error:", error);
+
+    return res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Unable to fetch profile",
     });
   }
 };
@@ -53,8 +55,15 @@ export const updateProfile = async (req, res) => {
       }
     });
 
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide at least one field to update",
+      });
+    }
+
     const user = await User.findByIdAndUpdate(
-      req.user.id,
+      req.user._id,
       { $set: updates },
       {
         new: true,
@@ -69,15 +78,17 @@ export const updateProfile = async (req, res) => {
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Profile updated successfully",
       user,
     });
   } catch (error) {
-    res.status(500).json({
+    console.error("Update profile error:", error);
+
+    return res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Unable to update profile",
     });
   }
 };
