@@ -4,16 +4,26 @@ import express from "express";
 import {
   getProfile,
   updateProfile,
+  uploadProfilePicture,
 } from "../controllers/profileController.js";
 
-import protect from "../middleware/authMiddleware.js";
+import { protect } from "../middleware/authMiddleware.js";
+import upload from "../middleware/uploadMiddleware.js";
 
 const router = express.Router();
 
-// Get logged-in user's profile
+// Get profile
 router.get("/", protect, getProfile);
 
-// Update logged-in user's profile
+// Update profile
 router.put("/update", protect, updateProfile);
+
+// Upload profile picture
+router.post(
+  "/upload-picture",
+  protect,
+  upload.single("profilePicture"),
+  uploadProfilePicture
+);
 
 export default router;
