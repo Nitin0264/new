@@ -1,6 +1,15 @@
 
 import { useEffect, useState } from "react";
-import { Camera, Upload, UserCircle, CheckCircle2 } from "lucide-react";
+import {
+  Camera,
+  Upload,
+  UserCircle,
+  CheckCircle2,
+  GraduationCap,
+  Plus,
+  Trash2,
+  BookOpen,
+} from "lucide-react";
 
 import api from "../api/axios";
 import Experience from "../components/profile/Experience";
@@ -22,6 +31,15 @@ const emptyProfile = {
   preferredLocations: [],
   expectedSalary: 0,
   availability: "immediately",
+};
+
+const emptyEducation = {
+  institution: "",
+  degree: "",
+  fieldOfStudy: "",
+  startYear: "",
+  endYear: "",
+  grade: "",
 };
 
 function Profile() {
@@ -74,6 +92,30 @@ function Profile() {
     setProfile((prev) => ({
       ...prev,
       [name]: value.split(",").map((item) => item.trim()).filter(Boolean),
+    }));
+  };
+
+  // Education management
+  const handleEducationChange = (index, field, value) => {
+    setProfile((prev) => ({
+      ...prev,
+      education: prev.education.map((item, i) =>
+        i === index ? { ...item, [field]: value } : item
+      ),
+    }));
+  };
+
+  const addEducation = () => {
+    setProfile((prev) => ({
+      ...prev,
+      education: [...prev.education, { ...emptyEducation }],
+    }));
+  };
+
+  const removeEducation = (index) => {
+    setProfile((prev) => ({
+      ...prev,
+      education: prev.education.filter((_, i) => i !== index),
     }));
   };
 
@@ -310,6 +352,212 @@ function Profile() {
                 placeholder="Describe your professional background..."
               />
             </div>
+          </section>
+
+          {/* Education Section */}
+          <section className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm sm:p-8">
+
+            <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+              <div>
+                <div className="flex items-center gap-3">
+                  <div className="rounded-xl bg-blue-50 p-2.5 text-blue-600">
+                    <GraduationCap size={23} />
+                  </div>
+
+                  <h2 className="text-xl font-bold text-slate-900">
+                    Education
+                  </h2>
+                </div>
+
+                <p className="mt-2 text-sm text-slate-500">
+                  Add your academic qualifications and educational background.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={addEducation}
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
+              >
+                <Plus size={18} />
+                Add Education
+              </button>
+            </div>
+
+            {profile.education.length === 0 ? (
+              <div className="rounded-xl border-2 border-dashed border-slate-200 px-5 py-10 text-center">
+                <BookOpen className="mx-auto h-10 w-10 text-slate-300" />
+
+                <h3 className="mt-3 font-semibold text-slate-700">
+                  No education added yet
+                </h3>
+
+                <p className="mt-1 text-sm text-slate-500">
+                  Add your school, college, university, or other qualifications.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={addEducation}
+                  className="mt-5 inline-flex items-center gap-2 rounded-lg border border-blue-200 px-4 py-2.5 text-sm font-semibold text-blue-600 transition hover:bg-blue-50"
+                >
+                  <Plus size={17} />
+                  Add Your First Education
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-5">
+                {profile.education.map((education, index) => (
+                  <div
+                    key={index}
+                    className="rounded-xl border border-slate-200 bg-slate-50/70 p-5 sm:p-6"
+                  >
+                    <div className="mb-5 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <GraduationCap className="text-blue-600" size={20} />
+
+                        <h3 className="font-semibold text-slate-800">
+                          Education #{index + 1}
+                        </h3>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => removeEducation(index)}
+                        className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50"
+                      >
+                        <Trash2 size={16} />
+                        Remove
+                      </button>
+                    </div>
+
+                    <div className="grid gap-5 sm:grid-cols-2">
+
+                      <div className="sm:col-span-2">
+                        <label className="mb-2 block text-sm font-medium text-slate-700">
+                          Institution / University
+                        </label>
+
+                        <input
+                          type="text"
+                          value={education.institution || ""}
+                          onChange={(e) =>
+                            handleEducationChange(
+                              index,
+                              "institution",
+                              e.target.value
+                            )
+                          }
+                          placeholder="e.g. Uttaranchal University"
+                          className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="mb-2 block text-sm font-medium text-slate-700">
+                          Degree
+                        </label>
+
+                        <input
+                          type="text"
+                          value={education.degree || ""}
+                          onChange={(e) =>
+                            handleEducationChange(
+                              index,
+                              "degree",
+                              e.target.value
+                            )
+                          }
+                          placeholder="e.g. MCA, BCA, B.Tech"
+                          className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="mb-2 block text-sm font-medium text-slate-700">
+                          Field of Study
+                        </label>
+
+                        <input
+                          type="text"
+                          value={education.fieldOfStudy || ""}
+                          onChange={(e) =>
+                            handleEducationChange(
+                              index,
+                              "fieldOfStudy",
+                              e.target.value
+                            )
+                          }
+                          placeholder="e.g. Computer Applications"
+                          className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="mb-2 block text-sm font-medium text-slate-700">
+                          Start Year
+                        </label>
+
+                        <input
+                          type="text"
+                          value={education.startYear || ""}
+                          onChange={(e) =>
+                            handleEducationChange(
+                              index,
+                              "startYear",
+                              e.target.value
+                            )
+                          }
+                          placeholder="e.g. 2023"
+                          className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="mb-2 block text-sm font-medium text-slate-700">
+                          End Year
+                        </label>
+
+                        <input
+                          type="text"
+                          value={education.endYear || ""}
+                          onChange={(e) =>
+                            handleEducationChange(
+                              index,
+                              "endYear",
+                              e.target.value
+                            )
+                          }
+                          placeholder="e.g. 2027 or Pursuing"
+                          className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        />
+                      </div>
+
+                      <div className="sm:col-span-2">
+                        <label className="mb-2 block text-sm font-medium text-slate-700">
+                          Grade / Percentage / CGPA
+                        </label>
+
+                        <input
+                          type="text"
+                          value={education.grade || ""}
+                          onChange={(e) =>
+                            handleEducationChange(
+                              index,
+                              "grade",
+                              e.target.value
+                            )
+                          }
+                          placeholder="e.g. 8.5 CGPA or 75%"
+                          className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        />
+                      </div>
+
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
 
           {/* Experience */}
