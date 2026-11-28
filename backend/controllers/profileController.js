@@ -2,6 +2,18 @@
 import User from "../models/user.js";
 import cloudinary from "../config/cloudinary.js";
 
+// Calculate profile completion status
+const checkProfileCompletion = (user) => {
+  return Boolean(
+    user.name?.trim() &&
+    user.headline?.trim() &&
+    user.location?.trim() &&
+    user.education?.length > 0 &&
+    user.skills?.length > 0 &&
+    user.preferredJobRoles?.length > 0
+  );
+};
+
 // Get logged-in user's profile
 export const getProfile = async (req, res) => {
   try {
@@ -41,9 +53,11 @@ export const updateProfile = async (req, res) => {
       "education",
       "skills",
       "experience",
+      "experienceLevel",
       "projects",
       "preferredJobRoles",
       "preferredLocations",
+      "preferredEmploymentTypes",
       "expectedSalary",
       "availability",
     ];
@@ -63,14 +77,7 @@ export const updateProfile = async (req, res) => {
       });
     }
 
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      { $set: updates },
-      {
-        new: true,
-        runValidators: true,
-      }
-    ).select("-password");
+    const user = await User.findById(req.user._id);
 
     if (!user) {
       return res.status(404).json({
@@ -79,13 +86,28 @@ export const updateProfile = async (req, res) => {
       });
     }
 
+    Object.assign(user, updates);
+
+    user.profileCompleted = checkProfileCompletion(user);
+
+    await user.save();
+
+    const updatedUser = await User.findById(user._id).select("-password");
+
     return res.status(200).json({
       success: true,
       message: "Profile updated successfully",
-      user,
+      user: updatedUser,
     });
   } catch (error) {
     console.error("Update profile error:", error);
+
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
 
     return res.status(500).json({
       success: false,
@@ -127,18 +149,7 @@ export const uploadProfilePicture = async (req, res) => {
       uploadStream.end(req.file.buffer);
     });
 
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      {
-        $set: {
-          profilePicture: uploadedImage.secure_url,
-        },
-      },
-      {
-        new: true,
-        runValidators: true,
-      }
-    ).select("-password");
+    const user = await User.findById(req.user._id);
 
     if (!user) {
       return res.status(404).json({
@@ -147,10 +158,17 @@ export const uploadProfilePicture = async (req, res) => {
       });
     }
 
+    user.profilePicture = uploadedImage.secure_url;
+    user.profileCompleted = checkProfileCompletion(user);
+
+    await user.save();
+
+    const updatedUser = await User.findById(user._id).select("-password");
+
     return res.status(200).json({
       success: true,
       message: "Profile picture uploaded successfully!",
-      user,
+      user: updatedUser,
     });
   } catch (error) {
     console.error("Profile picture upload error:", error);

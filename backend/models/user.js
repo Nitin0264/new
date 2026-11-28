@@ -30,15 +30,16 @@ const userSchema = new mongoose.Schema(
       default: "job_seeker",
     },
 
+    // Profile Information
     profilePicture: {
       type: String,
       default: "",
     },
 
-    // Professional Information
     headline: {
       type: String,
       default: "",
+      trim: true,
     },
 
     bio: {
@@ -54,21 +55,31 @@ const userSchema = new mongoose.Schema(
     location: {
       type: String,
       default: "",
+      trim: true,
     },
 
     // Education
     education: [
       {
-        institution: String,
-        degree: String,
-        fieldOfStudy: String,
+        institution: {
+          type: String,
+          trim: true,
+        },
+        degree: {
+          type: String,
+          trim: true,
+        },
+        fieldOfStudy: {
+          type: String,
+          trim: true,
+        },
         startYear: String,
         endYear: String,
         grade: String,
       },
     ],
 
-    // Technical Skills
+    // Skills
     skills: [
       {
         type: String,
@@ -92,6 +103,12 @@ const userSchema = new mongoose.Schema(
       },
     ],
 
+    // Experience Level
+    experienceLevel: {
+      type: String,
+      default: "",
+    },
+
     // Projects
     projects: [
       {
@@ -103,9 +120,20 @@ const userSchema = new mongoose.Schema(
     ],
 
     // Career Preferences
-    preferredJobRoles: [String],
+    preferredJobRoles: {
+      type: [String],
+      default: [],
+    },
 
-    preferredLocations: [String],
+    preferredLocations: {
+      type: [String],
+      default: [],
+    },
+
+    preferredEmploymentTypes: {
+      type: [String],
+      default: [],
+    },
 
     expectedSalary: {
       type: Number,
