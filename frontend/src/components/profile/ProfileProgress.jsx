@@ -2,47 +2,40 @@
 function ProfileProgress({ profile }) {
   const checks = [
     {
-      title: "Personal Information",
-      description: "Name, headline, bio and location",
-      completed: Boolean(
-        profile.name?.trim() &&
-        profile.headline?.trim() &&
-        profile.bio?.trim() &&
-        profile.location?.trim()
-      ),
+      title: "Full Name",
+      description: "Add your full name",
+      completed: Boolean(profile.name?.trim()),
+    },
+    {
+      title: "Professional Headline",
+      description: "Add your professional headline",
+      completed: Boolean(profile.headline?.trim()),
+    },
+    {
+      title: "Location",
+      description: "Add your current location",
+      completed: Boolean(profile.location?.trim()),
     },
     {
       title: "Education",
       description: "Add at least one education record",
-      completed: profile.education?.some(
-        (item) => item.institution?.trim() && item.degree?.trim()
-      ) || false,
+      completed: Boolean(
+        profile.education?.some(
+          (item) =>
+            item.institution?.trim() && item.degree?.trim()
+        )
+      ),
     },
     {
       title: "Technical Skills",
-      description: "Add at least three skills",
-      completed: (profile.skills?.filter(Boolean).length || 0) >= 3,
+      description: "Add at least one skill",
+      completed: Boolean(profile.skills?.some((skill) => skill?.trim())),
     },
     {
-      title: "Work Experience",
-      description: "Add at least one work experience",
-      completed: profile.experience?.some(
-        (item) => item.company?.trim() && item.position?.trim()
-      ) || false,
-    },
-    {
-      title: "Projects",
-      description: "Add at least one project",
-      completed: profile.projects?.some(
-        (item) => item.title?.trim() && item.description?.trim()
-      ) || false,
-    },
-    {
-      title: "Career Preferences",
-      description: "Select job roles and locations",
+      title: "Preferred Job Roles",
+      description: "Select at least one preferred job role",
       completed: Boolean(
-        profile.preferredJobRoles?.some(Boolean) &&
-        profile.preferredLocations?.some(Boolean)
+        profile.preferredJobRoles?.some((role) => role?.trim())
       ),
     },
   ];
@@ -80,15 +73,12 @@ function ProfileProgress({ profile }) {
       </div>
 
       <p className="mt-2 text-sm text-slate-500">
-        {completedCount} of {checks.length} sections completed
+        {completedCount} of {checks.length} requirements completed
       </p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
         {checks.map((item) => (
-          <div
-            key={item.title}
-            className="flex items-start gap-3"
-          >
+          <div key={item.title} className="flex items-start gap-3">
             <div
               className={`mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm ${
                 item.completed
@@ -104,9 +94,7 @@ function ProfileProgress({ profile }) {
                 {item.title}
               </h3>
               <p className="text-xs text-slate-500">
-                {item.completed
-                  ? "Completed"
-                  : item.description}
+                {item.completed ? "Completed" : item.description}
               </p>
             </div>
           </div>
@@ -119,7 +107,7 @@ function ProfileProgress({ profile }) {
         </div>
       ) : (
         <div className="mt-5 rounded-lg bg-blue-50 p-3 text-sm text-blue-700">
-          Keep going! Complete the remaining sections to reach 100%.
+          Keep going! Complete the remaining requirements to reach 100%.
         </div>
       )}
     </div>

@@ -27,8 +27,10 @@ const emptyProfile = {
   skills: [],
   experience: [],
   projects: [],
+  experienceLevel: "",
   preferredJobRoles: [],
   preferredLocations: [],
+  preferredEmploymentTypes: [],
   expectedSalary: 0,
   availability: "immediately",
 };
@@ -41,6 +43,23 @@ const emptyEducation = {
   endYear: "",
   grade: "",
 };
+
+const employmentOptions = [
+  "Full-time",
+  "Part-time",
+  "Internship",
+  "Contract",
+  "Freelance",
+];
+
+const experienceLevels = [
+  "Fresher",
+  "Less than 1 year",
+  "1-2 years",
+  "3-5 years",
+  "5-8 years",
+  "8+ years",
+];
 
 function Profile() {
   const [profile, setProfile] = useState(emptyProfile);
@@ -56,7 +75,19 @@ function Profile() {
     const fetchProfile = async () => {
       try {
         const { data } = await api.get("/profile");
-        setProfile({ ...emptyProfile, ...data.user });
+
+        setProfile({
+          ...emptyProfile,
+          ...data.user,
+          education: data.user.education || [],
+          skills: data.user.skills || [],
+          experience: data.user.experience || [],
+          projects: data.user.projects || [],
+          preferredJobRoles: data.user.preferredJobRoles || [],
+          preferredLocations: data.user.preferredLocations || [],
+          preferredEmploymentTypes:
+            data.user.preferredEmploymentTypes || [],
+        });
       } catch (error) {
         setMessage(
           error.response?.data?.message || "Unable to load profile."
@@ -79,20 +110,44 @@ function Profile() {
     };
   }, [preview]);
 
+  const showMessage = (text, type = "success") => {
+    setMessage(text);
+    setMessageType(type);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     setProfile((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: name === "expectedSalary" ? Number(value) : value,
     }));
   };
 
   const handleArrayChange = (name, value) => {
     setProfile((prev) => ({
       ...prev,
-      [name]: value.split(",").map((item) => item.trim()).filter(Boolean),
+      [name]: value
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean),
     }));
+  };
+
+  // Preferred employment type selection
+  const handleEmploymentTypeChange = (type) => {
+    setProfile((prev) => {
+      const currentTypes = prev.preferredEmploymentTypes || [];
+
+      const updatedTypes = currentTypes.includes(type)
+        ? currentTypes.filter((item) => item !== type)
+        : [...currentTypes, type];
+
+      return {
+        ...prev,
+        preferredEmploymentTypes: updatedTypes,
+      };
+    });
   };
 
   // Education management
@@ -126,15 +181,13 @@ function Profile() {
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      setMessage("Please select a valid image.");
-      setMessageType("error");
+      showMessage("Please select a valid image.", "error");
       e.target.value = "";
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      setMessage("Image size must be less than 5 MB.");
-      setMessageType("error");
+      showMessage("Image size must be less than 5 MB.", "error");
       e.target.value = "";
       return;
     }
@@ -147,8 +200,7 @@ function Profile() {
   // Upload picture to Cloudinary
   const handlePictureUpload = async () => {
     if (!selectedFile) {
-      setMessage("Please select an image first.");
-      setMessageType("error");
+      showMessage("Please select an image first.", "error");
       return;
     }
 
@@ -166,20 +218,20 @@ function Profile() {
 
       setProfile((prev) => ({
         ...prev,
-        profilePicture: data.user.profilePicture,
+        profilePicture:
+          data.user?.profilePicture || prev.profilePicture,
       }));
 
       setSelectedFile(null);
       setPreview("");
 
-      setMessage("Profile picture uploaded successfully!");
-      setMessageType("success");
+      showMessage("Profile picture uploaded successfully!");
     } catch (error) {
-      setMessage(
+      showMessage(
         error.response?.data?.message ||
-          "Unable to upload profile picture."
+          "Unable to upload profile picture.",
+        "error"
       );
-      setMessageType("error");
     } finally {
       setUploading(false);
     }
@@ -188,20 +240,32 @@ function Profile() {
   // Save professional profile
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setSaving(true);
     setMessage("");
 
     try {
       const { data } = await api.put("/profile/update", profile);
 
-      setProfile({ ...emptyProfile, ...data.user });
-      setMessage("Profile updated successfully!");
-      setMessageType("success");
+      setProfile({
+        ...emptyProfile,
+        ...data.user,
+        education: data.user.education || [],
+        skills: data.user.skills || [],
+        experience: data.user.experience || [],
+        projects: data.user.projects || [],
+        preferredJobRoles: data.user.preferredJobRoles || [],
+        preferredLocations: data.user.preferredLocations || [],
+        preferredEmploymentTypes:
+          data.user.preferredEmploymentTypes || [],
+      });
+
+      showMessage("Profile updated successfully!");
     } catch (error) {
-      setMessage(
-        error.response?.data?.message || "Profile update failed."
+      showMessage(
+        error.response?.data?.message || "Profile update failed.",
+        "error"
       );
-      setMessageType("error");
     } finally {
       setSaving(false);
     }
@@ -209,8 +273,10 @@ function Profile() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <p className="text-slate-500 font-medium">Loading profile...</p>
+      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+        <p className="font-medium text-slate-500">
+          Loading profile...
+        </p>
       </div>
     );
   }
@@ -242,17 +308,14 @@ function Profile() {
 
           {/* Personal Information */}
           <section className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm sm:p-8">
-
             <h2 className="mb-6 text-xl font-bold text-slate-900">
               Personal Information
             </h2>
 
-            {/* Profile Picture Upload */}
+            {/* Profile Picture */}
             <div className="mb-8 flex flex-col items-center gap-5 rounded-xl bg-slate-50 p-6 sm:flex-row">
-
               <div className="relative">
                 <div className="flex h-28 w-28 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-blue-100 shadow-md">
-
                   {displayedPicture ? (
                     <img
                       src={displayedPicture}
@@ -262,7 +325,6 @@ function Profile() {
                   ) : (
                     <UserCircle className="h-20 w-20 text-blue-400" />
                   )}
-
                 </div>
 
                 <div className="absolute bottom-0 right-0 rounded-full bg-blue-600 p-2 text-white shadow">
@@ -280,7 +342,6 @@ function Profile() {
                 </p>
 
                 <div className="mt-4 flex flex-wrap justify-center gap-3 sm:justify-start">
-
                   <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-blue-500 hover:text-blue-600">
                     <Camera size={17} />
                     Choose Image
@@ -304,7 +365,6 @@ function Profile() {
                       {uploading ? "Uploading..." : "Upload Picture"}
                     </button>
                   )}
-
                 </div>
 
                 <p className="mt-3 text-xs text-slate-400">
@@ -315,7 +375,6 @@ function Profile() {
 
             {/* Personal Details */}
             <div className="grid gap-5 sm:grid-cols-2">
-
               {[
                 ["name", "Full Name"],
                 ["headline", "Professional Headline"],
@@ -335,7 +394,6 @@ function Profile() {
                   />
                 </div>
               ))}
-
             </div>
 
             <div className="mt-5">
@@ -347,16 +405,15 @@ function Profile() {
                 name="bio"
                 value={profile.bio || ""}
                 onChange={handleChange}
-                rows="4"
+                rows={4}
                 className="w-full rounded-lg border border-slate-200 p-4 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 placeholder="Describe your professional background..."
               />
             </div>
           </section>
 
-          {/* Education Section */}
+          {/* Education */}
           <section className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm sm:p-8">
-
             <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
               <div>
                 <div className="flex items-center gap-3">
@@ -432,127 +489,53 @@ function Profile() {
                     </div>
 
                     <div className="grid gap-5 sm:grid-cols-2">
-
-                      <div className="sm:col-span-2">
-                        <label className="mb-2 block text-sm font-medium text-slate-700">
-                          Institution / University
-                        </label>
-
-                        <input
-                          type="text"
-                          value={education.institution || ""}
-                          onChange={(e) =>
-                            handleEducationChange(
-                              index,
-                              "institution",
-                              e.target.value
-                            )
+                      {[
+                        [
+                          "institution",
+                          "Institution / University",
+                          "e.g. Uttaranchal University",
+                        ],
+                        ["degree", "Degree", "e.g. MCA, BCA, B.Tech"],
+                        [
+                          "fieldOfStudy",
+                          "Field of Study",
+                          "e.g. Computer Applications",
+                        ],
+                        ["startYear", "Start Year", "e.g. 2023"],
+                        ["endYear", "End Year", "e.g. 2027 or Pursuing"],
+                        [
+                          "grade",
+                          "Grade / Percentage / CGPA",
+                          "e.g. 8.5 CGPA or 75%",
+                        ],
+                      ].map(([field, label, placeholder]) => (
+                        <div
+                          key={field}
+                          className={
+                            field === "institution" || field === "grade"
+                              ? "sm:col-span-2"
+                              : ""
                           }
-                          placeholder="e.g. Uttaranchal University"
-                          className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                        />
-                      </div>
+                        >
+                          <label className="mb-2 block text-sm font-medium text-slate-700">
+                            {label}
+                          </label>
 
-                      <div>
-                        <label className="mb-2 block text-sm font-medium text-slate-700">
-                          Degree
-                        </label>
-
-                        <input
-                          type="text"
-                          value={education.degree || ""}
-                          onChange={(e) =>
-                            handleEducationChange(
-                              index,
-                              "degree",
-                              e.target.value
-                            )
-                          }
-                          placeholder="e.g. MCA, BCA, B.Tech"
-                          className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="mb-2 block text-sm font-medium text-slate-700">
-                          Field of Study
-                        </label>
-
-                        <input
-                          type="text"
-                          value={education.fieldOfStudy || ""}
-                          onChange={(e) =>
-                            handleEducationChange(
-                              index,
-                              "fieldOfStudy",
-                              e.target.value
-                            )
-                          }
-                          placeholder="e.g. Computer Applications"
-                          className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="mb-2 block text-sm font-medium text-slate-700">
-                          Start Year
-                        </label>
-
-                        <input
-                          type="text"
-                          value={education.startYear || ""}
-                          onChange={(e) =>
-                            handleEducationChange(
-                              index,
-                              "startYear",
-                              e.target.value
-                            )
-                          }
-                          placeholder="e.g. 2023"
-                          className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="mb-2 block text-sm font-medium text-slate-700">
-                          End Year
-                        </label>
-
-                        <input
-                          type="text"
-                          value={education.endYear || ""}
-                          onChange={(e) =>
-                            handleEducationChange(
-                              index,
-                              "endYear",
-                              e.target.value
-                            )
-                          }
-                          placeholder="e.g. 2027 or Pursuing"
-                          className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                        />
-                      </div>
-
-                      <div className="sm:col-span-2">
-                        <label className="mb-2 block text-sm font-medium text-slate-700">
-                          Grade / Percentage / CGPA
-                        </label>
-
-                        <input
-                          type="text"
-                          value={education.grade || ""}
-                          onChange={(e) =>
-                            handleEducationChange(
-                              index,
-                              "grade",
-                              e.target.value
-                            )
-                          }
-                          placeholder="e.g. 8.5 CGPA or 75%"
-                          className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                        />
-                      </div>
-
+                          <input
+                            type="text"
+                            value={education[field] || ""}
+                            onChange={(e) =>
+                              handleEducationChange(
+                                index,
+                                field,
+                                e.target.value
+                              )
+                            }
+                            placeholder={placeholder}
+                            className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                          />
+                        </div>
+                      ))}
                     </div>
                   </div>
                 ))}
@@ -560,7 +543,7 @@ function Profile() {
             )}
           </section>
 
-          {/* Experience */}
+          {/* Work Experience */}
           <Experience
             experience={profile.experience || []}
             setExperience={(experience) =>
@@ -578,16 +561,24 @@ function Profile() {
 
           {/* Skills and Career Preferences */}
           <section className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm sm:p-8">
-
             <h2 className="mb-6 text-xl font-bold text-slate-900">
               Skills & Career Preferences
             </h2>
 
+            {/* Skills and preferences */}
             {[
-              ["skills", "Skills (comma separated)"],
-              ["preferredJobRoles", "Preferred Job Roles"],
-              ["preferredLocations", "Preferred Locations"],
-            ].map(([name, label]) => (
+              ["skills", "Technical Skills", "React, JavaScript, Node.js..."],
+              [
+                "preferredJobRoles",
+                "Preferred Job Roles",
+                "React Developer, MERN Stack Developer...",
+              ],
+              [
+                "preferredLocations",
+                "Preferred Locations",
+                "Dehradun, Delhi, Bangalore...",
+              ],
+            ].map(([name, label, placeholder]) => (
               <div key={name} className="mb-5">
                 <label className="mb-2 block text-sm font-medium text-slate-700">
                   {label}
@@ -599,41 +590,114 @@ function Profile() {
                     handleArrayChange(name, e.target.value)
                   }
                   className="w-full rounded-lg border border-slate-200 p-3 outline-none focus:border-blue-500"
-                  placeholder="React, JavaScript, Node.js..."
+                  placeholder={placeholder}
                 />
+
+                <p className="mt-1 text-xs text-slate-400">
+                  Separate multiple entries with commas.
+                </p>
               </div>
             ))}
 
-            <label className="mb-2 block text-sm font-medium text-slate-700">
-              Expected Annual Salary
-            </label>
+            {/* Experience Level */}
+            <div className="mb-6">
+              <label className="mb-2 block text-sm font-medium text-slate-700">
+                Experience Level
+              </label>
 
-            <input
-              type="number"
-              name="expectedSalary"
-              min="0"
-              value={profile.expectedSalary ?? 0}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-slate-200 p-3 outline-none focus:border-blue-500"
-            />
+              <select
+                name="experienceLevel"
+                value={profile.experienceLevel || ""}
+                onChange={handleChange}
+                className="w-full rounded-lg border border-slate-200 p-3 outline-none focus:border-blue-500"
+              >
+                <option value="">Select your experience level</option>
 
-            <label className="mb-2 mt-5 block text-sm font-medium text-slate-700">
-              Availability
-            </label>
+                {experienceLevels.map((level) => (
+                  <option key={level} value={level}>
+                    {level}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-            <select
-              name="availability"
-              value={profile.availability || "immediately"}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-slate-200 p-3 outline-none focus:border-blue-500"
-            >
-              <option value="immediately">Immediately</option>
-              <option value="15-days">Within 15 days</option>
-              <option value="30-days">Within 30 days</option>
-              <option value="60-days">Within 60 days</option>
-              <option value="not-looking">Not looking</option>
-            </select>
+            {/* Preferred Employment Types */}
+            <div className="mb-6">
+              <label className="mb-3 block text-sm font-medium text-slate-700">
+                Preferred Employment Types
+              </label>
 
+              <p className="mb-4 text-sm text-slate-500">
+                Select all employment types you are interested in.
+              </p>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                {employmentOptions.map((type) => {
+                  const checked =
+                    profile.preferredEmploymentTypes?.includes(type) ||
+                    false;
+
+                  return (
+                    <label
+                      key={type}
+                      className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 transition ${
+                        checked
+                          ? "border-blue-500 bg-blue-50"
+                          : "border-slate-200 hover:border-blue-300"
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => handleEmploymentTypeChange(type)}
+                        className="h-4 w-4 accent-blue-600"
+                      />
+
+                      <span className="text-sm font-medium text-slate-700">
+                        {type}
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Expected Salary */}
+            <div>
+              <label className="mb-2 block text-sm font-medium text-slate-700">
+                Expected Annual Salary
+              </label>
+
+              <input
+                type="number"
+                name="expectedSalary"
+                min="0"
+                value={profile.expectedSalary ?? 0}
+                onChange={handleChange}
+                className="w-full rounded-lg border border-slate-200 p-3 outline-none focus:border-blue-500"
+                placeholder="Enter expected annual salary"
+              />
+            </div>
+
+            {/* Availability */}
+            <div className="mt-5">
+              <label className="mb-2 block text-sm font-medium text-slate-700">
+                Availability
+              </label>
+
+              <select
+                name="availability"
+                value={profile.availability || "immediately"}
+                onChange={handleChange}
+                className="w-full rounded-lg border border-slate-200 p-3 outline-none focus:border-blue-500"
+              >
+                <option value="immediately">Immediately</option>
+                <option value="15-days">Within 15 days</option>
+                <option value="30-days">Within 30 days</option>
+                <option value="60-days">Within 60 days</option>
+                <option value="not-looking">Not looking</option>
+              </select>
+            </div>
           </section>
 
           {/* Status Message */}
@@ -655,12 +719,11 @@ function Profile() {
           {/* Save Profile */}
           <button
             type="submit"
-            disabled={saving}
+            disabled={saving || uploading}
             className="w-full rounded-xl bg-blue-600 px-6 py-4 font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {saving ? "Saving Profile..." : "Save Professional Profile"}
           </button>
-
         </form>
       </div>
     </div>
